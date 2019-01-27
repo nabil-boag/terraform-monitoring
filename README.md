@@ -28,4 +28,11 @@ From the `docker` directory
 make terraform
 ```
 
+### Creating a service
+
+From a service directory e.g. `/environments/production/hello-world-service/`
+
+```sh
+terraform apply -var 'public_key_path=/home/terraform/.ssh/id_rsa.pub' -var 'private_key_path=/home/terraform/.ssh/id_rsa' -var 'newrelic_api_key=<MY ADMIN API KEY>'
+```
 

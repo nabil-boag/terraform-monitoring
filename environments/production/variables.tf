@@ -28,3 +28,15 @@ variable "vpc_id" {
 variable "subnet_id" {
   default = "subnet-0e8ada0b0483780e8"
 }
+
+variable "newrelic_api_key" {
+  description = "API Key that allows management of New Relic resources."
+}
+
+variable "service_name" {
+  default     = "Hello world service"
+}
+
+variable "service_team_email" {
+  default     = "nabilboag@gmail.com"
+}
