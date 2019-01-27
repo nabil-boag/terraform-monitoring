@@ -1,8 +1,3 @@
-variable "aws_region" {
-  description = "AWS region to launch servers."
-  default     = "eu-west-1"
-}
-
 variable "public_key_path" {
   description = <<DESCRIPTION
 Path to the SSH public key to be used for authentication.
@@ -21,14 +16,15 @@ Example: ~/.ssh/id_rsa
 DESCRIPTION
 }
 
-variable "key_name" {
-  description = "Desired name of AWS key pair"
+variable "aws_region" {
+  description = "AWS region to launch servers."
+  default     = "eu-west-1"
 }
 
 variable "vpc_id" {
-  description = "The VPC to launch the server in"
+  default = "vpc-01c8e3528898941d5"
 }
 
 variable "subnet_id" {
-  description = "The subnet to launch the server in"
+  default = "subnet-0e8ada0b0483780e8"
 }

@@ -15,3 +15,4 @@ ARG USER_ID=500
 
 RUN adduser -S -u ${USER_ID} terraform
 USER terraform
+RUN mkdir /home/terraform/.ssh

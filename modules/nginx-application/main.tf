@@ -1,8 +1,13 @@
+# Specify the provider and access details
+provider "aws" {
+  region = "${var.aws_region}"
+}
+
 # A security group for the ELB so it is accessible via the web
 resource "aws_security_group" "elb" {
   name        = "terraform_example_elb"
   description = "Used in the terraform"
-  vpc_id      = "${aws_vpc.default.id}"
+  vpc_id      = "${var.vpc_id}"
 
   # HTTP access from anywhere
   ingress {
@@ -26,7 +31,7 @@ resource "aws_security_group" "elb" {
 resource "aws_security_group" "default" {
   name        = "terraform_example"
   description = "Used in the terraform"
-  vpc_id      = "${aws_vpc.default.id}"
+  vpc_id      = "${var.vpc_id}"
 
   # SSH access from anywhere
   ingress {
@@ -56,7 +61,7 @@ resource "aws_security_group" "default" {
 resource "aws_elb" "web" {
   name = "terraform-example-elb"
 
-  subnets         = ["${aws_subnet.default.id}"]
+  subnets         = ["${var.subnet_id}"]
   security_groups = ["${aws_security_group.elb.id}"]
   instances       = ["${aws_instance.web.id}"]
 
@@ -78,16 +83,16 @@ resource "aws_instance" "web" {
   # communicate with the resource (instance)
   connection {
     # The default username for our AMI
-    user = "ubuntu"
-
-    # The connection will use the local SSH agent for authentication.
+    user          = "ubuntu"
+    type          = "ssh"
+    private_key   = "${file(var.private_key_path)}"
   }
 
   instance_type = "t2.micro"
 
   # Lookup the correct AMI based on the region
   # we specified
-  ami = "${lookup(var.aws_amis, var.aws_region)}"
+  ami = "ami-00035f41c82244dab"
 
   # The name of our SSH keypair we created above.
   key_name = "${aws_key_pair.auth.id}"
@@ -98,14 +103,13 @@ resource "aws_instance" "web" {
   # We're going to launch into the same subnet as our ELB. In a production
   # environment it's more common to have a separate private subnet for
   # backend instances.
-  subnet_id = "${aws_subnet.default.id}"
+  subnet_id = "${var.subnet_id}"
 
   # We run a remote provisioner on the instance after creating it.
   # In this case, we just install nginx and start it. By default,
   # this should be on port 80
   provisioner "remote-exec" {
     inline = [
-      "sudo apt-get -y update",
       "sudo apt-get -y install nginx",
       "sudo service nginx start",
     ]
