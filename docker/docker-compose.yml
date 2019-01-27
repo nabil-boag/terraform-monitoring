@@ -1,0 +1,16 @@
+version: '2'
+services:
+  terraform:
+    container_name: terraform
+    build: .
+    image: terraform-local
+    volumes:
+      - ../:/app
+      # - ${HOME}/.aws/credentials:/home/terraform/.aws/credentials:ro
+      # - ${HOME}/.aws/config:/home/terraform/.aws/config:ro
+    working_dir: /app
+    environment:
+      - AWS_DEFAULT_REGION=eu-west-1
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      # - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
